@@ -1,9 +1,9 @@
-const { MongoClient,ObjectId, ServerApiVersion } = require("mongodb");
+const { MongoClient, ObjectId, ServerApiVersion } = require("mongodb");
 const express = require("express");
 const cors = require("cors");
 const app = express();
 //gitignor
-require('dotenv').config();
+require("dotenv").config();
 const port = process.env.PORT || 5000;
 
 // used Middleware
@@ -12,8 +12,7 @@ app.use(cors());
 app.use(express.json());
 
 // Connact With MongoDb Database
-const uri =
-  `mongodb+srv://${process.env.USER_NAME}:${process.env.PASSWORD}@cluster0.2vi6qur.mongodb.net/?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${process.env.USER_NAME}:${process.env.PASSWORD}@cluster0.2vi6qur.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -23,16 +22,19 @@ const client = new MongoClient(uri, {
 // Create a async fucntion to all others activity
 async function run() {
   try {
-   
-
     // Create Database to store Data
     const productsCollection = client.db("AIED").collection("products");
 
     app.get("/products", async (req, res) => {
       const products = await productsCollection.find({}).toArray();
       res.send(products);
-    })
-
+    });
+    app.post("/products", async (req, res) => {
+      const products = await productsCollection.insertOne(req.body);
+      if (result.insertedId) {
+        res.send(products);
+      }
+    });
   } finally {
     // await client.close();
   }
