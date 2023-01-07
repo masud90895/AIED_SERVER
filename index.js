@@ -40,9 +40,14 @@ async function run() {
     app.post("/user", async (req, res) => {
       const user = await userCollection.insertOne(req.body);
       if (user.insertedId) {
-        res.send(products);
+        res.send(user);
       }
     });
+
+    app.get("/user", async (req, res) =>{
+      const user = await userCollection.find({}).toArray();
+      res.send(user);
+    })
   } finally {
     // await client.close();
   }
