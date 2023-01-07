@@ -24,7 +24,7 @@ async function run() {
   try {
     // Create Database to store Data
     const productsCollection = client.db("AIED").collection("products");
-    const userCollection = client.db("AIED").collection("user")
+    const userCollection = client.db("AIED").collection("user");
 
     app.get("/products", async (req, res) => {
       const products = await productsCollection.find({}).toArray();
@@ -44,21 +44,35 @@ async function run() {
       }
     });
 
-    app.get("/user", async (req, res) =>{
+    app.get("/user", async (req, res) => {
       const user = await userCollection.find({}).toArray();
       res.send(user);
-    })
+    });
 
-    app.delete("/user/:id", async (req, res) =>{
+    app.delete("/user/:id", async (req, res) => {
       const id = req.params.id;
-      const user = await userCollection.deleteOne({_id: ObjectId(id)})
-      if(result.deletedCount){
+      const user = await userCollection.deleteOne({ _id: ObjectId(id) });
+      if (user.deletedCount) {
         res.send(user);
       }
-    })
+    });
 
+    app.get("/edit/:id", async (req, res) => {
+      const id = req.params.id;
+      const user = await userCollection.findOne({ _id: ObjectId(id) });
+      res.send(user);
+    });
+    app.put("/edit/:id", async (req, res) => {
+      const id = req.params.id;
+      const result = await userCollection.updateOne(
+        { _id: ObjectId(id) },
+        { $set: req.body }
+      );
 
-
+      if (result.matchedCount) {
+        res.send(result);
+      }
+    });
   } finally {
     // await client.close();
   }
