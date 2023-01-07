@@ -24,6 +24,7 @@ async function run() {
   try {
     // Create Database to store Data
     const productsCollection = client.db("AIED").collection("products");
+    const userCollection = client.db("AIED").collection("user")
 
     app.get("/products", async (req, res) => {
       const products = await productsCollection.find({}).toArray();
@@ -31,7 +32,14 @@ async function run() {
     });
     app.post("/products", async (req, res) => {
       const products = await productsCollection.insertOne(req.body);
-      if (result.insertedId) {
+      if (products.insertedId) {
+        res.send(products);
+      }
+    });
+
+    app.post("/user", async (req, res) => {
+      const user = await userCollection.insertOne(req.body);
+      if (user.insertedId) {
         res.send(products);
       }
     });
