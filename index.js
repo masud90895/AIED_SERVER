@@ -48,6 +48,17 @@ async function run() {
       const user = await userCollection.find({}).toArray();
       res.send(user);
     })
+
+    app.delete("/user/:id", async (req, res) =>{
+      const id = req.params.id;
+      const user = await userCollection.deleteOne({_id: ObjectId(id)})
+      if(result.deletedCount){
+        res.send(user);
+      }
+    })
+
+
+
   } finally {
     // await client.close();
   }
