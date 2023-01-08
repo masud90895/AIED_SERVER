@@ -25,7 +25,7 @@ async function run() {
     // Create Database to store Data
     const productsCollection = client.db("AIED").collection("products");
     const userCollection = client.db("AIED").collection("user");
-    const CartCollection = client.db("AIED").collection("cart")
+    const CartCollection = client.db("AIED").collection("cart");
 
     app.get("/products", async (req, res) => {
       const products = await productsCollection.find({}).toArray();
@@ -75,24 +75,18 @@ async function run() {
       }
     });
 
-
     app.post("/cart", async (req, res) => {
       const cart = await CartCollection.insertOne(req.body);
       if (cart.insertedId) {
-        res.send(cart)
+        res.send(cart);
       }
-    })
+    });
 
     app.get("/cart", async (req, res) => {
-      const cart = await CartCollection.find({}).toArray();
+      const email = req.query.email;
+      const cart = await CartCollection.find({ email: email }).toArray();
       res.send(cart);
-    })
-
-
-
-
-
-
+    });
   } finally {
     // await client.close();
   }
